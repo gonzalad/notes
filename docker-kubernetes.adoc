@@ -1,5 +1,4 @@
 = Docker & Kubernetes
-
 :toc:
 :toclevels: 3
 :toc-placement!:
@@ -126,9 +125,12 @@ TODO : créer manuellement une image docker, la tager, l'uploader dans repo do+c
 
 TODO : faire la même chose avec build.gradle
 
+
 == Docker
 
-=== Installation : https://docs.docker.com/linux/step_one/
+=== Installation 
+
+Se reporter à https://docs.docker.com/linux/step_one/
 
 === Créer son image
 
@@ -204,7 +206,7 @@ TODO : faire la même chose avec build.gradle
 
   docker rm `docker ps -aq -f status=exited`
 
-= Liens, tutoriaux et Références
+== Liens, tutoriaux et Références
 
 * https://github.com/arun-gupta/kubernetes-java-sample/
 * https://docs.docker.com/linux/last_page/
@@ -220,13 +222,13 @@ divers:
 * https://www.infoq.com/presentations/spring-boot-microservices
 
 
-# Microservices
+== Microservices
 
-## Logs
+=== Logs
 
 Solution : use Elastisearch, Kibana, Logstash and filebeat.
 
-## Monitoring
+=== Monitoring
 
 Exemples :
  * http://www.hawkular.org/docs/overview.html
