@@ -1,0 +1,452 @@
+= Git Notes
+:toc:
+:toclevels: 3
+:toc-placement!:
+
+toc::[]
+
+== References
+
+* https://git-scm.com/book/fr/v2[Pro Git]
+* http://wiki.eclipse.org/EGit/User_Guide[EGit]
+
+
+== Commandes
+
+=== Créer un repository
+
+* Créer un nouveau repo
+
+  git init
+
+* cloner un repo existant
+
+  git clone <url>
+
+
+=== Fichiers & Commit
+
+* Vérifier le statut des fichiers
+
+  git status -s
+
+* Ajouter un fichier dans la zone d'index
+
+  git add <fichier>
+  git add . (ajoute tous les fichiers)
+
+* Annuler une modification de la zone d'index
+
+  git reset HEAD <nom-fichier>
+
+* Supprimer les modifications du working directory
+
+  git checkout -- <file-name>
+
+* Commit des modifications indexées
+
+   git commit
+
+* Modifier le dernier commit
+----
+   # prend les modifications de la zone d'index pour rééditer le commit 
+   # (ne jamais le faire si commit déjà poussé)
+   git commit --amend
+----
+* Ignorer des fichiers
+
+  cat .gitignore
+
+* Effacer un fichier
+** Effacer dans l'index et dans le répertoire de travail
+
+   git rm <nom-fichier>
+
+** Effacer de l'index mais pas du répertoire de travail
+
+  git rm --cached <nom-fichier>
+
+* Déplacer un fichier
+----
+  git mv <ancien-nom> <nouveau-nom>
+  équivalent à :
+  mv <ancien> <nouveau>
+  git rm <ancien>
+  git add <nouveau>
+----
+
+
+=== Inspecter les modifications
+
+** Modifications non indexées (compare répertoire de travail avec index)
+
+  git diff
+
+** Modifications indexées (compare index et contenu git)
+
+  git diff --staged
+
+** Avec éditeur externe : git difftool
+
+** Modifications apportées par notre branche 
+
+  git diff master...issue53
+  la syntaxe ... indique a diff de montrer la différence entre issue53 et l'ancêtre commun de issue53 et origin/master
+
+
+=== Historique des commit
+
+* Liste des commit
+
+  git log
+
+* Liste des commit et differences contenues
+** l'option -p affiche les différences entre chaque commit
+  
+  git log -p
+  
+** affiche arborescence des commit
+
+  git log --pretty=format:"%h %s" --graph
+
+** le -2 limite l'affichage aux 2 derniers commits
+
+  git log -p -2
+
+** affiche les commit qui ont ajouté ou remplacé la chaîne functionname
+
+  git log -S=functionname
+
+** afficher les commit qui contiennent des modifications sous l'arborescence t/
+
+   git log -- t/
+
+** Liste des commits contenus dans branche origin/master, mais pas dans issue53
+
+  git log --no-merges issue53..master
+  ou (équivalent)
+  git log --no-merges master --not issue53
+
+
+=== Repository remote
+
+* Afficher les repo remote
+
+  git remote
+
+* Ajouter un remote
+
+  git remote add origin <url-repo>
+
+* Récupérer les dernières modifications
+
+  git fetch <remote-name>
+
+* Pousser les modifications
+
+  git push originaire master
+
+* Savoir si nos branches locales sont en avance ou en retard en terme de commit par rapport a celles remote :
+----
+  git fetch -- all
+  git branch -vv
+----
+* Afficher les branches remote
+
+  git remote show origin
+
+=== Branches
+
+* Créer une branche
+
+  git branch toto
+
+* Supprimer une branche
+
+  git branch -d toto
+
+* passer sur une autre branche
+
+  git checkout toto
+
+* Liste des branches
+
+  git branch
+
+* Liste des branches et du dernier commit sur chaque branche
+
+  git branch -v
+
+* Liste des branches déjà fusionnées avec la branche courante (i.e. pour savoir sur quelles branches il est sûr de faite un git branch -d)
+----
+  git checkout master
+  git branch --merged
+----
+* Liste des branches non merger avec branche courante
+----
+  git checkout master
+  git branch --no-merged
+----
+* raccourci pour créer une branche et checkout :
+----
+  git checkout -b toto
+  #equivalent à
+  git branch toto
+  git checkout toto
+----
+* Créer une branche locale a partir d'une branche remote
+
+  git checkout -b serverfix origin/serverfix
+
+* Merge
+----
+  # merge la branche hotfix dans la branche courante (master)
+  git checkout master
+  git merge hotfix
+----
+* Rebase
+----
+  git checkout issue53
+  git rebase master
+  git checkout master
+  git merge issue53
+----
+* cherry-pick
+----
+   # rebase un seul commit sur la branche actuelle
+  git checkout master
+  git cherry-pick e43a6
+  A noter, si conflits dans le Merge, git notifie, il indique dans git status la liste des fichiers en conflit, modifie le contenu de chaque fichier en obflit pour indiquer la partie venant de la branche courante (HEAD) et de l'autre.
+  Il faudra résoudre ces conflits en modifiant manuellement les fichiers, puis en faisant git add.
+  Note : possibilité d'utiliser un outil de merge via git mergetool
+----
+
+=== Tags
+
+* Liste des tags
+----
+  git tag
+  # tags commençant par 1.8
+  git tag -l "1.8*"
+  * Créer un tag annoté
+  git tag -a v1.4
+----
+* Tagguer un commit
+
+  git tag -a v1.4 9fcbe02
+
+* Pousser un tag
+
+  git push origin 1.4
+
+
+
+== Sample Workflows
+
+
+=== Worflow pour un repository Git privé
+
+----
+git clone <URL>
+...
+
+git fetch origin
+git checkout master
+
+# create topic branch from master
+git checkout -b issue53
+
+# make some commits to improve project
+...work...
+git add & commit
+
+# réconciliation (local merge)
+git fetch origin
+
+#    on vérifie si des commit ont été réalisés sur master et qu'ils n'existent pas sur issue53
+git log --no-merges issue53..origin/master 
+git checkout master
+git merge origin/master
+git merge issue53
+...reexecute unit tests
+
+git push origin master
+----
+
+=== Workflow pour un repository Git publique
+
+----
+git clone <repo-public>
+
+# create topic branch from master
+git checkout -b issue53 origin/master
+
+# mais some commits to improve project
+...work...
+
+#aller sur github et former le rpo public dans mon repo perso
+git remote add myfork <url-repo-perso>
+git checkout issue53
+git log --no-merges issue53..origin/master
+git branch issue53-save #sauvegarde état branche avant reconciliation
+git rebase origin/master # réconciliation
+...unit tests...
+
+# push this branch to my github project
+git push myfork issue53 # utiliser option-f si nécessaire
+
+# open a pull request on github
+... créer pull request de github
+----
+
+
+=== Workflow pour Github
+
+Note : avec github on aura tendance a éviter les rebase dès qu'un commit fait est poussé dans une pull request (pour ne pas casser les conversations de la pull request).
+
+----
+  # aller sur github et forker le projet
+  ...
+
+  # cloner son repo en local
+  git clone <repo-personnel>
+
+  # ajouter le repo publique
+  git remote add upstream <url-repo-public>
+  git fetch upstream
+
+  # create topic branch from master
+  git checkout -b issue53 upstream/master
+
+  # make some commits to improve project
+  ...work...
+  git add & commit
+
+  # vérifier s'ils branche peut se merger simplement sur repo master
+  git fetch upstream
+  git log --no-merges issue53..upstream/master
+
+  # rebase : si il y a eu des commit sur la branche master depuis la création de notre topic
+  # branch, alors rebaser
+  git branch issue53-save #sauvegarde état branche avant reconciliation
+  git rebase upstream/master # réconciliation
+  ...unit tests...
+
+  # push this branch to my github project
+  git push origin issue53 # utiliser option-f si nécessaire
+
+  # open a pull request on github
+  ... créer pull request de github
+
+  # si modifications supplémentaires à apporter
+  git checkout issue53
+  ... some work...
+  git add & commit
+  git push origin issue53
+  # ajouter commentaire dans pull request pour indiquer que la modification a été poussée 
+  # et description de la modification
+
+  # si master a encore évoluée
+  git checkout issue53
+  git fetch upstream
+  git merge upstream/master
+  git push origin issue53
+----
+
+== Avancé
+
+=== Référencer des commit
+
+* Identifiant commit d'une branche
+
+  git rev-parse issue53
+
+* Savoir sur quels commit le HEAD est passé
+
+  git reflog
+
+* Contenu d'un commit
+
+  git show 74713b
+  git show issue53
+  git show HEAD
+  git show HEAD@{5}
+
+* Référencer un commit parent
+
+  git show HEAD~3 # 3eme parent du commit courant
+  git show HEAD^ # 1er parent du commit actuel
+  attention git show HEAD^2 indique le second parent du commit actuel et pas le père du père
+
+* Commit ranges
+** Double dot
+
+  Indicates all commits reachable from a commit but not from another.
+  git log master..issue53
+  git log issue53 --not master
+  git log origin/master..HEAD
+  git log issue53 issue54 --not master
+
+** Triple dot
+
+  Indicates all commits that are reachable by either of two branches but not by both.
+  git log master...issue53
+  --left-right switch indicates from which branch comes each commit
+  git log --left-right master...issue53
+
+
+=== Stash
+
+Note: by default git stash stashes only indexed files
+
+* Create stash
+
+  git stash
+
+* List
+
+  git stash list
+
+* Supprimer un stash
+
+  git stash drop stash@{0}
+
+* Stasher index *et* workspace
+
+  git stash -u
+
+* Stasher seulement les fichiers 
+
+  git stash --keep-index
+
+* Contrôler l'application d'un stash
+
+  la commande suivante créé une nouvelle branche , applique le stash par dessus et drop le stash si l'application s'est déroulée correctement :
+  git stash branch testchanges
+
+
+=== Recherche
+  
+* Avec git grep
+----
+  git grep -n mymethod # recherche dans le working dir les fichier contenant lymethod et affiche le numéro de ligne
+  git grep --country mymethod #idem, mais affiche le nombre d'occurrences trouvées pour chaque fichier
+  git grep -p mymethid *.java # recherche dans les fichiers java dans quelles méthodes sont appelées mymethod
+----
+* Avec git log
+**  Option -S L'option -S afichedans quels commit une chaîne de caractère a été introduite ou supprimée
+
+  git log -Smymethod --oneline 
+
+** Option -L affiche quels commits ont modifie une méthode
+
+  git log -L :mymethod:MyClass.java
+
+
+
+
+= Tests à faire
+
+ * Faire un refactoring dans éclipse puis commit et voir comment git diff (ou git log --follow) gèrele refactor.
+ * Utiliser EGit en plus des commandes en ligne
+ 
