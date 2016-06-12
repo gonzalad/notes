@@ -1,0 +1,89 @@
+= Notes sur Amazon Web Services
+
+:toc:
+:toclevels: 3
+:toc-placement!:
+
+toc::[]
+
+== Spring Boot
+
+Créer une application Spring boot : https://start.spring.io/
+
+Pour déployer sur un tomcat existant 
+c.f. https://spring.io/blog/2014/03/07/deploying-spring-boot-applications
+et http://docs.spring.io/spring-boot/docs/1.1.4.RELEASE/reference/htmlsingle/#build-tool-plugins-maven-packaging
+
+* move from a jar build to a war build in pom.xml 
+* comment out the declaration of the spring-boot-maven-plugin plugin in your pom.xml file
+* add a web entry point into your application (Application should extend SpringBootServletInitializer and override configure :
+----
+     @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(applicationClass);
+    }    
+----
+
+
+== AWS Spring Boot
+
+https://fatihdirlikli.wordpress.com/2015/09/14/springboot-aws/
+
+
+== AWS Java
+
+=== Docs & Tutorials
+
+https://aws.amazon.com/fr/java/
+AWS Elastic Beanstalk = Web Applications
+
+Tutorials
+* https://aws.amazon.com/fr/getting-started/launch-an-app/
+* https://aws.amazon.com/fr/getting-started/launch-a-virtual-machine/
+* https://aws.amazon.com/fr/getting-started/backup-files-to-amazon-s3/
+* https://aws.amazon.com/fr/getting-started/launch-a-wordpress-website/
+* https://aws.amazon.com/fr/getting-started/tutorials/
+
+Elastic Beanstalk doc
+* http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/Welcome.html
+* http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/concepts.html
+* http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/using-features.deployment.html
+* http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/using-features.managing.html
+* http://aws.amazon.com/fr/eclipse/
+* http://aws.amazon.com/fr/documentation/elastic-beanstalk/
+
+
+== Installer une application Web sur AWS
+
+
+=== Simple (application seule sans SGBD)
+
+==== Variante 1 : via AWS Beanstalk
+c.f. http://mtdevuk.com/2015/02/10/how-to-deploy-a-spring-boot-application-to-amazon-aws-using-elastic-beanstalk/
+
+Avec BeansTalk, on n'a pas besoin de gérer les serveurs (installer Tomcat, l'upgrader, le configurer...) 
+
+A noter, on n'est pas limité à Tomcat, on peut utiliser toute image Docker (c.f. http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/concepts.platforms.html#concepts.platforms.dockerpreconfig)
+
+
+==== Variante 2 : Manuellement via EC2
+
+* http://blog.webagesolutions.com/archives/1379
+* https://alextheedom.wordpress.com/cloud/amazon-free-usage-tier-installing-tomcat-7-on-an-ec2-linux-instance/
+* http://coenraets.org/blog/2011/11/set-up-an-amazon-ec2-instance-with-tomcat-and-mysql-5-minutes-tutorial/
+* http://www.excelsior-usa.com/articles/tomcat-amazon-ec2-basic.html
+
+Avec EC2, il faut gérer les serveurs.
+
+Cela implique de créer une instance de Linux chez Amazon, d'installer à la main tomcat (sudo yum install tomcat8), de faire scp du war, faire le chgrp adhoc puis démarrer tomcat.
+
+
+=== Complet (application + SGBD)
+
+https://fatihdirlikli.wordpress.com/2015/10/02/spring-boot-spring-cloud-aws-and-elasticbeanstalk-part-2-deployment
+/
+
+5. Pousser directement de GIT ?
+https://www.otreva.com/blog/deploying-wordpress-amazon-web-services-aws-ec2-rds-via-elasticbeanstalk/
+
+

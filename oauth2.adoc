@@ -1,0 +1,99 @@
+= OAuth2
+
+Etat en cours...
+
+:toc:
+:toclevels: 3
+:toc-placement!:
+
+toc::[]
+
+== Reste à faire
+
+Plein de choses manquent : 
+* application AngularJs appelant un service REST sécurisé avec OAuth2, 
+* comment gérer le cas d'une application angular appelant un service qui en appelle un autre (propagation identité, délégation, ... ?)
+* revoir les notes avec l'application spring-oauth2-hello-world
+
+== OAuth2 avec Spring Cloud Security
+
+* Annoter l'Application avec @EnableOAuth2Sso
+* Ajouter les dépendances Maven spring-cloud-starter-oauth2
+* Configurer OAuth2 
+  Exemple pour github :
+----
+security:
+  oauth2:
+    client:
+      clientId: bd1c0a783ccdd1c9b9e4
+      clientSecret: 1a9030fbca47a5b2c28e92f19050bb77824b5ad1
+      accessTokenUri: https://github.com/login/oauth/access_token
+      userAuthorizationUri: https://github.com/login/oauth/authorize
+      clientAuthenticationScheme: form
+    resource:
+      userInfoUri: https://api.github.com/user
+      preferTokenInfo: false
+----
+
+Créer un compte oauth pour l'application sur github :
+* se connecter sur github
+* Menu Settings
+* Menu OAuth Applications
+* Onglet Developer Applications
+* lien register an application +
+  Saisir :
+----
+ 	Application Name = Spring Boot Sample
+ 	Homepage URL = http://localhost:8080
+ 	Cela retourne un :
+ 	client ID : 25083232babd154b1631
+ 	client Secret : de480bbf5a8962f3060d1f462b6b159c26113c41
+ 	Que l'on peut révoquer.
+----
+
+A partir de là, le premier accès à l'application entraîne une redirection vers twitter nous demandant si on accepte que l'application ai accès aux infos publiques de notre compte.
+
+A noter, si on veut plus d'infos, il faut ajouter un scope à application.yml, exemple : 
+scope: user:email,notifications
+
+
+Que se passe t'il sous le capot ?
+
+voir https://developer.github.com/v3/oauth/
+
+. si on a déjà donné les droits
+----
+http://localjost:8080
+	<- 302 vers login
+http://localhost:8080/login
+	<- 302 vers https://github.com/login/oauth/authorize...
+https://github.com/login/oauth/authorize?client_id=25083232babd154b1631&redirect_uri=http://localhost:8080/login&response_type=code&state=yAx6ET
+	<- 302 http://localhost:8080/login?code=95f0b8cfaa2fb1f5fe1e&state=yAx6ET
+	et 2 cookies :
+		Set-Cookie:_gh_sess=eyJzZXNzaW9uX2lkIjoiYTA1Njc4YmQyODFhYzYxNTRjY2ZiOGYwNjkwMTdlMTEiLCJzcHlfcmVwbyI6InNwcmluZy1wcm9qZWN0cy9zcHJpbmctc2VjdXJpdHktb2F1dGgiLCJzcHlfcmVwb19hdCI6MTQ1OTE4MDYyMywibGFzdF93cml0ZSI6MTQ1OTE4MDk5MTQxMCwiY29udGV4dCI6Ii8ifQ%3D%3D--be53dc87d973fe843b35cbd6f45aa9db2bbab646; path=/; secure; HttpOnly
+		Set-Cookie:user_session=lQukHIru23QLQqCFqM39d241dBv4ez1WDaa9DYq7tf-gtxHHVvlVvzt2VlexdW7PliJYe9ew2NvJGIJT; path=/; expires=Mon, 11 Apr 2016 16:03:11 -0000; secure; HttpOnly	
+http://localhost:8080/login?code=95f0b8cfaa2fb1f5fe1e&state=yAx6ET
+	<- 302 vers http://localhost:8080/
+----
+
+. si c'est la première fois (github va nous afficher un écran nus demandant si on souhaite fournir les accès à l'application exemple)
+----
+http://localjost:8080
+	<- 302 vers login
+http://localhost:8080/login
+	<- 302 vers https://github.com/login/oauth/authorize...
+https://github.com/login/oauth/authorize?client_id=25083232babd154b1631&redirect_uri=http://localhost:8080/login&response_type=code&state=5HbLYF
+	<- 200 OK
+	Affichage du formulaire Authorize application avec review permissions (Public data only)
+	et 2 cookies :
+		Set-Cookie:_gh_sess=eyJzZXNzaW9uX2lkIjoiYTA1Njc4YmQyODFhYzYxNTRjY2ZiOGYwNjkwMTdlMTEiLCJzcHlfcmVwbyI6InNwcmluZy1wcm9qZWN0cy9zcHJpbmctc2VjdXJpdHktb2F1dGgiLCJzcHlfcmVwb19hdCI6MTQ1OTE4MDYyMywibGFzdF93cml0ZSI6MTQ1OTE4MTM4ODc2OSwiY29udGV4dCI6Ii8ifQ%3D%3D--3089acf4b6cc0f4dbfb2e0f9e7849f08be9f0c4e; path=/; secure; HttpOnly
+		Set-Cookie:user_session=lQukHIru23QLQqCFqM39d241dBv4ez1WDaa9DYq7tf-gtxHHVvlXTIfSsmSaeDzDNC-JnCYHfDd9acXo; path=/; expires=Mon, 11 Apr 2016 16:09:48 -0000; secure; HttpOnly
+<clic sur Authorise application>
+	<- 302 http://localhost:8080/login?code=47c22b4d5302fd694904&state=5HbLYF
+http://localhost:8080/login?code=47c22b4d5302fd694904&state=5HbLYF
+	<- 302 http://localhost:8080/
+http://localhost:8080/
+	200
+<affichage de la page (service rest appelé)...>
+----
+
