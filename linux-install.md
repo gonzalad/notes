@@ -1,3 +1,5 @@
+# Linux installation de logiciels
+
 # Virtual Box
 
 sudo mount -t vboxsf /opt/git-projects ~/git-projects
@@ -105,6 +107,7 @@ sudo mount -t vboxsf /opt/git-projects ~/git-projects
     set guioptions-=T
     endif
 
+
 # Installation sublime text
 
 voir aussi [Sublime Text Repo](http://www.ubuntuupdates.org/ppa/sublime_text_3)
@@ -112,6 +115,36 @@ voir aussi [Sublime Text Repo](http://www.ubuntuupdates.org/ppa/sublime_text_3)
     sudo add-apt-repository ppa:webupd8team/sublime-text-3 
     sudo apt-get update
     sudo apt-get install sublime-text-installer
+
+
+#Java install
+
+    $ sudo add-apt-repository ppa:webupd8team/java
+    $ sudo apt-get update
+    $ sudo apt-get install oracle-java8-installer
+
+
+# Gradle download
+
+## Installation
+
+    sudo add-apt-repository ppa:cwchien/gradle
+    sudo apt-get update
+    sudo apt-get install gradle
+
+    #speed up gradle
+    touch ~/.gradle/gradle.properties && echo "org.gradle.daemon=true" >> ~/.gradle/gradle.properties
+
+## Création d'un projet gradle
+
+    mkdir <project<
+    cd <project>
+    git init
+    vi build.gradle
+    #crée le fichier gradlew
+    gradle wrapper
+    # à partir de là, il suffira d'exécuter ./gradlew pour lancer les cmd gradle
+
 
 # Installation docker
 
