@@ -215,7 +215,8 @@ Se reporter à https://docs.docker.com/linux/step_one/
 * mvn docker:build
 * http://ricostacruz.com/cheatsheets/docker.html
 
-divers:
+Divers:
+
 * https://speakerdeck.com/saturnism/2015-spring-io-barcelona-spring-boot-microservices-container-kubernetes-how-to
 * https://speakerdeck.com/saturnism/2015-springone-2gx-java-based-microservices-and-kubernetes-how-to
 * https://spring.io/blog/2015/10/19/springone2gx-2015-replay-spring-boot-micro-services-containers-and-kubernetes-how-to
