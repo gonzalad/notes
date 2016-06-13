@@ -117,11 +117,21 @@ voir aussi [Sublime Text Repo](http://www.ubuntuupdates.org/ppa/sublime_text_3)
     sudo apt-get install sublime-text-installer
 
 
-#Java install
+# Installation Git
+
+    sudo apt-get install git
+
+
+# Java install
 
     $ sudo add-apt-repository ppa:webupd8team/java
     $ sudo apt-get update
     $ sudo apt-get install oracle-java8-installer
+
+
+# Maven install
+
+    sudo apt-get install maven
 
 
 # Gradle download
