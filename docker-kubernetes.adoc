@@ -53,8 +53,10 @@ tuer process avec docker
 ----
 # retourne liste des container (cid) docker
 docker ps
+
 # liste les process du container
 docker top <cid>
+
 # tue le process pid d'un container.
 sudo docker exec <cid> kill -9 <pid>
 ----
@@ -190,6 +192,10 @@ Se reporter à https://docs.docker.com/linux/step_one/
 
    docker rm $(docker ps -a --format={{.Names}})
 
+ * Liste des containers docker 
+
+   docker ps
+
  * To list all running and stopped containers
 
    docker ps -a
@@ -201,6 +207,14 @@ Se reporter à https://docs.docker.com/linux/step_one/
  * To list all running and stopped containers, showing only their container id
 
   docker ps -aq
+
+ * Récupérer adresse IP d'un container
+
+   docker inspect <cid> |grep IPAddress
+
+ * Démarrer un shell dans un container
+
+   docker exec -i -t <cid> /bin/bash
 
  * To remove all containers that are NOT running
 
