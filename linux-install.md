@@ -156,6 +156,40 @@ voir aussi [Sublime Text Repo](http://www.ubuntuupdates.org/ppa/sublime_text_3)
     # à partir de là, il suffira d'exécuter ./gradlew pour lancer les cmd gradle
 
 
+# Installation Eclipse
+
+ * Download Eclipse from its [website](http://www.eclipse.org/downloads/)
+ * Extract
+
+    cd /opt/ && sudo tar -zxvf ~/Downloads/eclipse-*.tar.gz && sudo chown -R agonzalez eclipse
+ * Ajouter la ligne suivante dans eclipse.ini (http://askubuntu.com/questions/761604/eclipse-not-working-in-16-04)
+
+    --launcher.GTK_version
+    2
+
+ * Créer un lanceur
+   * sudo vi /usr/share/applications/eclipse.desktop
+   * Puis copier le texte suivant
+
+	[Desktop Entry]
+	Name=Eclipse 
+	Type=Application
+	Exec=/opt/eclipse/eclipse
+	Terminal=false
+	Icon=/opt/eclipse/icon.xpm
+	Comment=Integrated Development Environment
+	NoDisplay=false
+	Categories=Development;IDE
+	Name[en]=eclipse.desktop
+
+   * sudo chmod a+r /usr/share/applications/eclipse.desktop
+ * Installer le plugin Buildship (TODO)
+
+# Installation SOAP UI
+
+Suivre les instructions https://www.soapui.org/getting-started/installing-soapui/installing-on-linux-or-unix.html.
+
+
 # Installation docker
 
 c.f. https://docs.docker.com/engine/installation/linux/ubuntulinux/
@@ -179,18 +213,26 @@ main`).
  1. apt-cache policy docker-engine
       From now on when you run apt-get upgrade, APT pulls from the new repository.
     * pre-requisites
+
       install linux-image-extra
       sudo apt-get update
       sudo apt-get install linux-image-extra-$(uname -r)
+
     * install Docker
+
       sudo apt-get update 
       sudo apt-get install docker-engine
+
     * Start the docker daemon
+
       sudo service docker start
+
     * Verify docker is installed correctly.
+
       sudo docker run hello-world
+
  1. S'ajouter dans le groupe docker :
-   sudo usermod -aG docker <user>, puis se reloguer
+   `sudo usermod -aG docker <user>`, puis se reloguer
    dans le cas contraire, docker ps génère une erreur (il faut dans ce cas faire sudo docker ps)
 
 # Développement UI
