@@ -218,7 +218,12 @@ Se reporter à https://docs.docker.com/linux/step_one/
 
  * To remove all containers that are NOT running
 
-  docker rm `docker ps -aq -f status=exited`
+   docker rm `docker ps -aq -f status=exited`
+
+ * Supprimer toutes les images sauf tomcat, java et postgres
+
+   docker rmi $(docker images | grep -v 'java\|tomcat\|postgres' | awk {'print $3'})
+
 
 == Liens, tutoriaux et Références
 

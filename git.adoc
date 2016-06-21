@@ -353,6 +353,35 @@ Note : avec github on aura tendance a éviter les rebase dès qu'un commit fait 
   git push origin issue53
 ----
 
+
+=== Workflow pour Actuel
+
+
+----
+
+  # rafraichir le origin/ master
+  git fetch origin
+
+  # create une topic branch from master
+  git checkout -b TPSVC-515 ogigin/master
+
+  # make some commits to improve project
+  ...work...
+  git status &  add & commit
+
+  # vérifier s'ils branche peut se merger simplement sur repo master
+  git fetch origin
+  git log --no-merges TPSVC-515..origin/master
+
+  # rebase : si il y a eu des commit sur la branche master depuis la création de notre topic
+  # branch, alors rebaser
+  git rebase origin/master # réconciliation
+  ...unit tests...
+
+  # push this branchinto master branch in github project repo
+  git push origin TPSVC-515:master 
+
+----
 == Avancé
 
 === Référencer des commit
