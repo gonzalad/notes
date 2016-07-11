@@ -432,6 +432,10 @@ Note: by default git stash stashes only indexed files
 
   git stash
 
+* Create stash (inluding non-indexed files)
+
+  git stash -u
+
 * List
 
   git stash list
@@ -440,9 +444,9 @@ Note: by default git stash stashes only indexed files
 
   git stash drop stash@{0}
 
-* Stasher index *et* workspace
+* Supprimer tous les stash
 
-  git stash -u
+  git stash clear
 
 * Stasher seulement les fichiers 
 
