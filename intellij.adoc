@@ -1,0 +1,17 @@
+= IntelliJ Shortcuts
+
+SHIFT + F10 : execute class (i.e. JUnit)
+SHIFT + F9 : debug class (i.e. JUnit)
+CTRL+N : Find class
+CTRL+SHIFT+N : Find  file
+CTRL+B : Go to class
+F2 / Shift + F2 : fo to next / previous error
+Alt+F7 : Find references (in project ?)
+SHIFT + F6 : rename file
+CTRL+F8 : add/remove breakpoint
+CTRL+ALT+L : reformattage
+CTRL+ALT+O : optimisation import
+CTRL + F12 : naviguer méthodes - equivalent de CTRL + O Eclipse 
+
+See also https://resources.jetbrains.com/assets/products/intellij-idea/IntelliJIDEA_ReferenceCard.pdf
+
