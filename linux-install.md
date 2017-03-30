@@ -247,3 +247,31 @@ suivre tutoriel https://angular.io/docs/js/latest/quickstart.html :
 
 
 
+# Utilities
+
+## SSH
+
+
+### Connection through a gateway
+
+```
+ssh -A -t <gateway> ssh -A <target>
+```
+
+
+### SSH tunnel: Connection through a gateway
+
+Listen on localhost 8080 and forwards through gateway to target_host
+```
+ssh -L 8080:<target_host:target:port> <gateway>
+```
+
+
+## ngrep & other network tools
+
+Display all TCP communication going on port 33991:
+```
+ngrep -t -W byline port 33991
+```
+
+

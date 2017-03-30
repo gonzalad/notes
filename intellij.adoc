@@ -12,6 +12,6 @@ CTRL+F8 : add/remove breakpoint
 CTRL+ALT+L : reformattage
 CTRL+ALT+O : optimisation import
 CTRL + F12 : naviguer méthodes - equivalent de CTRL + O Eclipse 
+CTRL + SLASH (numpad) : comment / uncomment lines
 
 See also https://resources.jetbrains.com/assets/products/intellij-idea/IntelliJIDEA_ReferenceCard.pdf
-
